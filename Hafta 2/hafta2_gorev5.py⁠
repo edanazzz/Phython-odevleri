@@ -1,0 +1,18 @@
+# Kurum: İstanbul Nişantaşı Üniversitesi
+# Ders: Python ile Programlama
+# Öğretim Üyesi: Dr. Öğr. Üyesi Murat Emeç
+# Dönem: 2026-2027 Güz
+# Öğrenci Adı Soyadı: Eda Naz Gülarslan
+# Öğrenci Numarası: 20253005006
+# Tarih: 04.10.2026
+# Açıklama: Aylık bileşik faiz formülüyle yatırımın gelecekteki değerini hesaplar.
+
+A = float(input("Anapara (TL): "))
+r = float(input("Yıllık faiz (%): "))
+y = float(input("Süre (yıl): "))
+
+# G = A * (1 + r / (12 * 100)) ** (12 * y)
+gelecekteki_deger = A * ((1 + (r / 1200)) ** (12 * y))
+gelecekteki_deger = round(gelecekteki_deger, 2)
+
+print(f"Gelecekteki değer: {gelecekteki_deger} TL")
