@@ -33,3 +33,16 @@ def sure_olc(fonk):
         return sonuc
         
     return sarmalayici
+
+
+def say(fonk):
+    """Çağrı sayısını fonksiyonun bir niteliğinde (cagri) tutan dekoratör."""
+    @wraps(fonk)
+    def sarmalayici(*args, **kwargs):
+        sarmalayici.cagri += 1  # Her çalışmada sayacı 1 artır
+        return fonk(*args, **kwargs)
+    
+    # Sayacı başlangıçta 0 olarak ayarlıyoruz
+    sarmalayici.cagri = 0
+    return sarmalayici
+
