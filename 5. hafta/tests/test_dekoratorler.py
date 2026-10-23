@@ -1,15 +1,14 @@
 import sys
 import os
 from functools import lru_cache
+
+# Dekoratorleri bulabilmesi için dosya yolunu ayarlıyoruz
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from uzay_oyunu.dekoratorler import sure_olc, say
+from uzay_oyunu.dekoratorler import sure_olc, say, log_cagri
 
-
-# Dekoratoru bulabilmesi için dosya yolunu ayarlıyoruz
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from uzay_oyunu.dekoratorler import sure_olc
-
-# --- 1. Testler İçin Örnek Fonksiyonlar ---
+# ==========================================
+# GÖREV 1: SÜRE ÖLÇEN DEKORATÖR TESTLERİ
+# ==========================================
 @sure_olc
 def topla(a, b):
     """İki sayıyı toplar."""
@@ -20,7 +19,6 @@ def selamla(isim, mesaj="Merhaba"):
     """Kişiyi selamlar."""
     return f"{mesaj}, {isim}!"
 
-# --- 2. İstenen 3 Testin Yapılması ---
 def test_sonuc_degismiyor():
     assert topla(3, 4) == 7
     print("Test 1 Başarılı: Sonuç değişmeden dönüyor.")
@@ -34,7 +32,7 @@ def test_kimlik_korunuyor():
     assert topla.__doc__ == "İki sayıyı toplar."
     print("Test 3 Başarılı: __name__ ve __doc__ korunuyor.")
 
-# --- 3. Hafta 4 Önbelleksiz Rota Sayacı Süre Ölçümü ---
+# Hafta 4 Ön belleksiz Rota Sayacı Testi
 galaksi_baglantilari = {
     "dünya": ["centauri", "sirius", "orion"],
     "centauri": ["dünya", "orion"],
@@ -51,32 +49,14 @@ def rota_sayisi_hesapla(baglantilar, gezegen, adim):
         toplam += rota_sayisi_hesapla(baglantilar, komsu, adim - 1)
     return toplam
 
-# Sadece ana çağrının süresini ölçmek için sarmalıyoruz
 @sure_olc
 def rota_sayaci_baslat(baglantilar, gezegen, adim):
     return rota_sayisi_hesapla(baglantilar, gezegen, adim)
 
-if __name__ == "__main__":    
-    print("\n--- GÖREV 2: FİBONACCİ ÇAĞRI SAYILARI ---")
-    fib_yalnizca_say(20)
-    print(f"Yalnızca @say: {fib_yalnizca_say.cagri}")
-    
-    fib_say_ustte(20)
-    print(f"@say üstte, @lru_cache altta: {fib_say_ustte.cagri}")
-    
-    fib_cache_ustte(20)
-    # lru_cache dışarıda olduğu için içindeki sayaca __wrapped__ ile ulaşıyoruz
-    print(f"@lru_cache üstte, @say altta: {fib_cache_ustte.__wrapped__.cagri}")
 
-    print("--- DEKORATÖR TESTLERİ ---\n")
-    test_sonuc_degismiyor()
-    test_adli_argumanlar()
-    test_kimlik_korunuyor()
-    
-    print("\n--- HAFTA 4 ROTA SAYACI SÜRE ÖLÇÜMÜ (Adım=20) ---")
-    rota_sayaci_baslat(galaksi_baglantilari, "dünya", 20)
-# --- GÖREV 2: FİBONACCİ ÇAĞRI SAYACI TESTLERİ ---
-
+# ==========================================
+# GÖREV 2: ÇAĞRI SAYACI VE FİBONACCİ TESTİ
+# ==========================================
 # 1. Yalnızca @say
 @say
 def fib_yalnizca_say(n):
@@ -98,3 +78,37 @@ def fib_cache_ustte(n):
     return fib_cache_ustte(n-1) + fib_cache_ustte(n-2)
 
 
+# ==========================================
+# GÖREV 3: LOGLAYAN DEKORATÖR TESTİ
+# ==========================================
+@log_cagri
+def yolculuk(hedef, hiz=1):
+    return f"{hedef} hiz={hiz}"
+
+def test_log_cagri():
+    sonuc = yolculuk('orion', hiz=3)
+    assert sonuc == 'orion hiz=3'
+    print("Test 4 Başarılı: log_cagri sonuçları bozmuyor.")
+
+
+# ==========================================
+# TÜM TESTLERİ ÇALIŞTIRMA BÖLÜMÜ
+# ==========================================
+if __name__ == "__main__":
+    print("--- GÖREV 1: DEKORATÖR TESTLERİ ---")
+    test_sonuc_degismiyor()
+    test_adli_argumanlar()
+    test_kimlik_korunuyor()
+    
+    print("\n--- HAFTA 4 ROTA SAYACI SÜRE ÖLÇÜMÜ (Adım=20) ---")
+    rota_sayaci_baslat(galaksi_baglantilari, "dünya", 20)
+
+    print("\n--- GÖREV 2: FİBONACCİ ÇAĞRI SAYILARI ---")
+    fib_yalnizca_say(20)
+    print(f"Yalnızca @say: {fib_yalnizca_say.cagri}")
+    
+    fib_say_ustte(20)
+    print(f"@say üstte, @lru_cache altta: {fib_say_ustte.cagri}")
+    
+    fib_cache_ustte(20)
+    print(f"@lru_cache üstte, @
