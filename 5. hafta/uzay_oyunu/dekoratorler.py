@@ -45,4 +45,25 @@ def say(fonk):
     # Sayacı başlangıçta 0 olarak ayarlıyoruz
     sarmalayici.cagri = 0
     return sarmalayici
+def log_cagri(fonk):
+    """Her çağrıdan önce argümanları, sonra dönüş değerini yazdıran dekoratör."""
+    @wraps(fonk)
+    def sarmalayici(*args, **kwargs):
+        # 1. Gelen tüm argümanları metne çevirip aralarına virgül koyuyoruz
+        arg_listesi = [repr(a) for a in args]
+        kwarg_listesi = [f"{k}={repr(v)}" for k, v in kwargs.items()]
+        tum_argumanlar = ", ".join(arg_listesi + kwarg_listesi)
+        
+        # 2. Fonksiyon çalışmadan hemen önce ekrana yazdır (-> işaretiyle)
+        print(f"-> {fonk.__name__}({tum_argumanlar})")
+        
+        # 3. Asıl fonksiyonu çalıştır ve sonucu al
+        sonuc = fonk(*args, **kwargs)
+        
+        # 4. İşlem bittikten sonra sonucu ekrana yazdır (<- işaretiyle)
+        print(f"<- {fonk.__name__} = {repr(sonuc)}")
+        
+        return sonuc
+        
+    return sarmalayici
 
