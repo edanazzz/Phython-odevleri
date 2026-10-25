@@ -1,5 +1,5 @@
 # Kurum: İstanbul Nişantaşı Üniversitesi
-# Ders: İleri Python Programlama
+# Ders: Python ile Programlama
 # Öğretim Üyesi: Dr. Öğr. Üyesi Murat Emeç
 # Dönem: 2026-2027 Güz
 # Öğrenci Adı Soyadı: EDA NAZ GÜLARSLAN
