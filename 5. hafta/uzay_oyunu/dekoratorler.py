@@ -82,5 +82,31 @@ def log_cagri(fonk):
             return fonk(*args, **kwargs)
         return sarmalayici
     return dekorator
+    def hafiza(maxsize=None):
+    """lru_cache olmadan çalışan, closure tabanlı kendi hafıza dekoratörümüz."""
+    def dekorator(fonk):
+        _onbellek = {}  # Hafızada tutacağımız sözlük
+        
+        @wraps(fonk)
+        def sarmalayici(*args):
+            if args in _onbellek:
+                return _onbellek[args]  # Sonuç hafızada varsa direkt döndür
+            
+            # Hafızada yoksa hesapla ve kaydet
+            sonuc = fonk(*args)
+            _onbellek[args] = sonuc
+            
+            # Eğer sınır verildiyse ve kapasite dolduysa en eskiyi (ilk gireni) sil
+            if maxsize is not None and len(_onbellek) > maxsize:
+                en_eski = next(iter(_onbellek))
+                del _onbellek[en_eski]
+                
+            return sonuc
+            
+        # Test edebilmek için sözlüğe dışarıdan erişim yolu açıyoruz
+        sarmalayici.cache_getir = lambda: _onbellek
+        return sarmalayici
+    return dekorator
+
 
 
