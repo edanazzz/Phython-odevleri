@@ -66,4 +66,21 @@ def log_cagri(fonk):
         return sonuc
         
     return sarmalayici
+    def sinirla(alt, ust):
+    """Fonksiyonun ilk argümanının belirtilen aralıkta olmasını zorunlu kılan dekoratör."""
+    def dekorator(fonk):
+        @wraps(fonk)
+        def sarmalayici(*args, **kwargs):
+            # İlk argümanı alıyoruz (örneğin yakıt miktarı)
+            deger = args[0]
+            
+            # Eğer değer alt ve üst sınırın dışındaysa hata fırlat
+            if not (alt <= deger <= ust):
+                raise ValueError(f"{fonk.__name__}: {deger} değeri {alt}-{ust} aralığında değil")
+            
+            # Her şey yolundaysa asıl fonksiyonu çalıştır
+            return fonk(*args, **kwargs)
+        return sarmalayici
+    return dekorator
+
 
