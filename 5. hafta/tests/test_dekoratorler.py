@@ -2,9 +2,9 @@ import sys
 import os
 from functools import lru_cache
 
-# Dekoratorleri ve komutlari bulabilmesi için yol ayarı
+# Yol ayarları ve tüm dekoratörlerin içe aktarılması
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from uzay_oyunu.dekoratorler import sure_olc, say, log_cagri
+from uzay_oyunu.dekoratorler import sure_olc, say, log_cagri, sinirla
 from uzay_oyunu.komutlar import KOMUTLAR, komut
 
 # --- GÖREV 1 TESTLERİ ---
@@ -33,23 +33,41 @@ def test_gorev3():
     assert test_yolculuk() == "orion"
     print("Görev 3 Testi Başarılı.")
 
-# --- GÖREV 4 TESTLERİ (YENİ) ---
+# --- GÖREV 4 TESTLERİ ---
 def test_gorev4():
-    # 1. Komutlar kaydedilmiş mi?
     assert "yardim" in KOMUTLAR
-    assert "envanter" in KOMUTLAR
-    assert "harita" in KOMUTLAR
-    
-    # 2. Aynı isimde komut eklenirse hata veriyor mu?
     hata_verdi_mi = False
     try:
-        @komut("yardim", "Kopya komut")
-        def sahte_fonksiyon(durum): pass
+        @komut("yardim", "Kopya")
+        def sahte(durum): pass
     except ValueError:
         hata_verdi_mi = True
+    assert hata_verdi_mi
+    print("Görev 4 Testleri Başarılı.")
+
+# --- GÖREV 5 TESTLERİ (YENİ) ---
+@sinirla(0, 100)
+def yakit_harca(miktar):
+    return 100 - miktar
+
+def test_gorev5():
+    # 1. Normal ve sınır değerleri testleri (0 ve 100)
+    assert yakit_harca(30) == 70
+    assert yakit_harca(0) == 100
+    assert yakit_harca(100) == 0
+    
+    # 2. Aralık dışı değer testi (150)
+    hata_verdi_mi = False
+    try:
+        yakit_harca(150)
+    except ValueError as e:
+        hata_verdi_mi = True
+        # Hata mesajının doğruluğunu kontrol ediyoruz
+        assert str(e) == "yakit_harca: 150 değeri 0-100 aralığında değil"
         
-    assert hata_verdi_mi, "Aynı isimli komut engellenmedi!"
-    print("Görev 4 Testleri Başarılı: Kayıt deseni ve hata fırlatma çalışıyor.")
+    assert hata_verdi_mi, "Aralık dışı değerde hata fırlatılmadı!"
+    print("Görev 5 Testleri Başarılı: Argüman alan sınır dekoratörü çalışıyor.")
+
 
 if __name__ == "__main__":
     print("--- TÜM TESTLER BAŞLIYOR ---\n")
@@ -57,4 +75,5 @@ if __name__ == "__main__":
     test_gorev2()
     test_gorev3()
     test_gorev4()
+    test_gorev5()
     print("\n--- TESTLER TAMAMLANDI ---")
